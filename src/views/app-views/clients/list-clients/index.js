@@ -6,7 +6,7 @@ import { EyeOutlined } from "@ant-design/icons";
 import Loading from "components/shared-components/Loading";
 
 const UserList = () => {
-  const [users, getUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const history = useHistory();
 
@@ -21,7 +21,7 @@ const UserList = () => {
       throw new Error("failed to fetch");
     }
     const data = await response.json();
-    getUsers(data);
+    setUsers(data);
     setLoading(false);
     return data;
   };
@@ -29,7 +29,6 @@ const UserList = () => {
     getUser();
   }, []);
 
-  console.log(users);
   const tableColumns = [
     {
       title: "User",
