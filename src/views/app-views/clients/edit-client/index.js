@@ -8,23 +8,16 @@ import { UserOutlined } from "@ant-design/icons";
 import { ROW_GUTTER } from "constants/ThemeConstant";
 import Flex from "components/shared-components/Flex";
 
-const EditClient = () => {
+import { connect } from "react-redux";
+
+const EditClient = (props) => {
+  const { users } = props;
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
   const params = useParams();
   const history = useHistory();
 
-  const getUser = async () => {
-    const response = await fetch("https://jsonplaceholder.typicode.com/users");
-    if (!response.ok) {
-      throw new Error("failed to fetch");
-    }
-    const data = await response.json();
-    const user = data.filter((u) => u.id == params.id);
-    setUser(...user);
-    setLoading(false);
-    return data;
-  };
+  const getUser = users.items.filter((u) => u.id == params.id);
 
   const submitHandler = () => {
     setLoading(true);
@@ -34,9 +27,8 @@ const EditClient = () => {
     }, 1000);
   };
   useEffect(() => {
-    getUser();
+    setUser(...getUser);
   }, []);
-  console.log(user);
 
   return (
     <>
@@ -165,4 +157,4 @@ const EditClient = () => {
   );
 };
 
-export default EditClient;
+export default connect(({ users }) => ({ users }))(EditClient);

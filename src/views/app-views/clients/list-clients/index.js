@@ -5,29 +5,22 @@ import AvatarStatus from "components/shared-components/AvatarStatus";
 import { EyeOutlined } from "@ant-design/icons";
 import Loading from "components/shared-components/Loading";
 
-const UserList = () => {
-  const [users, setUsers] = useState([]);
+import { connect } from "react-redux";
+import { getUsersRequest } from "../../../../redux/actions/users";
+
+const UserList = (props) => {
   const [loading, setLoading] = useState(true);
   const history = useHistory();
+  const { getUsersRequest, users } = props;
 
   const showUserProfile = (user) => {
-    console.log(user);
     history.push(`edit-client/${user.id}`);
   };
 
-  const getUser = async () => {
-    const response = await fetch("https://jsonplaceholder.typicode.com/users");
-    if (!response.ok) {
-      throw new Error("failed to fetch");
-    }
-    const data = await response.json();
-    setUsers(data);
-    setLoading(false);
-    return data;
-  };
   useEffect(() => {
-    getUser();
-  }, []);
+    getUsersRequest();
+    setLoading(false);
+  }, [getUsersRequest]);
 
   const tableColumns = [
     {
@@ -110,11 +103,13 @@ const UserList = () => {
         <Loading cover="content" />
       ) : (
         <Card bodyStyle={{ padding: "0px" }}>
-          <Table columns={tableColumns} dataSource={users} rowKey="id" />
+          <Table columns={tableColumns} dataSource={users.items} rowKey="id" />
         </Card>
       )}
     </>
   );
 };
 
-export default UserList;
+export default connect(({ users }) => ({ users }), {
+  getUsersRequest,
+})(UserList);
