@@ -1,6 +1,7 @@
+/* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Card, Table, Tag, Tooltip, message, Button } from "antd";
+import { Card, Table, Tooltip, Button } from "antd";
 import AvatarStatus from "components/shared-components/AvatarStatus";
 import { EyeOutlined } from "@ant-design/icons";
 import Loading from "components/shared-components/Loading";
@@ -18,8 +19,15 @@ const UserList = (props) => {
   };
 
   useEffect(() => {
+    console.log("before request", users.items, users.items.length);
     getUsersRequest();
+    console.log(
+      "after request & before loading",
+      users.items,
+      users.items.length
+    );
     setLoading(false);
+    console.log("after loading", users.items, users.items.length);
   }, [getUsersRequest]);
 
   const tableColumns = [
@@ -99,7 +107,7 @@ const UserList = (props) => {
 
   return (
     <>
-      {loading ? (
+      {loading & (users.items.length === 0) ? (
         <Loading cover="content" />
       ) : (
         <Card bodyStyle={{ padding: "0px" }}>
